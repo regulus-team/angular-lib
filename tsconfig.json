@@ -23,6 +23,10 @@
       "rt-state-reset": [
         "dist/rt-state-reset/rt-state-reset",
         "dist/rt-state-reset"
+      ],
+      "rt-messages": [
+        "dist/rt-messages/rt-messages",
+        "dist/rt-messages"
       ]
     }
   }

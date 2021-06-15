@@ -1,0 +1,13 @@
+{
+  "name": "rt-messages",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^10.1.6",
+    "@angular/core": "^10.1.6",
+    "@ngxs/store": "^3.7.2",
+    "@ngxs/router-plugin": "^3.6.2"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}
