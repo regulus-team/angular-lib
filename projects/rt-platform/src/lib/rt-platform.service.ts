@@ -1,6 +1,6 @@
 import {Inject, Injectable, Optional, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser, isPlatformServer} from '@angular/common';
-import {defaultConfig, RtPlatformConfig, RtPlatformConfigToken} from './rt-platform.model';
+import {defaultConfig, RtPlatformConfig, RtPlatformConfigToken} from './symbols';
 
 
 @Injectable({

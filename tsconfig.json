@@ -19,6 +19,10 @@
       "rt-platform": [
         "dist/rt-platform/rt-platform",
         "dist/rt-platform"
+      ],
+      "rt-state-reset": [
+        "dist/rt-state-reset/rt-state-reset",
+        "dist/rt-state-reset"
       ]
     }
   }

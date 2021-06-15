@@ -284,3 +284,6 @@ frontend/dist/*
 
 production_local.py
 local_local.py
+
+# Exclude lib sources
+!**/src/lib/

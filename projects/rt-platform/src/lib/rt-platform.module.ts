@@ -1,6 +1,6 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {WINDOW, WindowService} from './window.service';
-import {factoryFn, RtPlatformConfig, RtPlatformConfigToken} from './rt-platform.model';
+import {factoryFn, RtPlatformConfig, RtPlatformConfigToken} from './symbols';
 import {RtPlatformService} from './rt-platform.service';
 
 

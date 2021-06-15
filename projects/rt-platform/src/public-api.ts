@@ -4,3 +4,5 @@
 
 export * from './lib/rt-platform.service';
 export * from './lib/rt-platform.module';
+export * from './lib/window.service';
+export * from './lib/symbols';

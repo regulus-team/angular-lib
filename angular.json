@@ -163,6 +163,46 @@
           }
         }
       }
+    },
+    "rt-state-reset": {
+      "projectType": "library",
+      "root": "projects/rt-state-reset",
+      "sourceRoot": "projects/rt-state-reset/src",
+      "prefix": "rt",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/rt-state-reset/tsconfig.lib.json",
+            "project": "projects/rt-state-reset/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/rt-state-reset/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/rt-state-reset/src/test.ts",
+            "tsConfig": "projects/rt-state-reset/tsconfig.spec.json",
+            "karmaConfig": "projects/rt-state-reset/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/rt-state-reset/tsconfig.lib.json",
+              "projects/rt-state-reset/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }},
   "defaultProject": "rt-angular-lib"
 }
