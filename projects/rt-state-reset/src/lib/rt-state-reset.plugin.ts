@@ -7,20 +7,22 @@ import {defaultConfig, RtStateResetConfig, RtStateResetConfigToken} from './symb
 @Injectable()
 export class RtStateResetPlugin implements NgxsPlugin {
   constructor( @Optional() @Inject(RtStateResetConfigToken) injectedConfig: RtStateResetConfig) {
-    /** merge with default config & save in local variable (so it will be never undefined) */
+    // Merge provided config with default values (so it never will be undefined).
     this.config = Object.assign(defaultConfig, injectedConfig);
   }
-  private readonly config: RtStateResetConfig;
+
+  /** Current module config. */
+  private config: RtStateResetConfig;
 
   /**
-   * reset plugin works wrong with storage plugin (storage overwrite reset changes)
-   * this plugin will reset states correctly (set default values using `STATE_RESET_DATA_SLICE` param)
+   * Reset plugin works wrong with storage plugin (storage overwrite reset changes)
+   * This plugin will reset states correctly (set default values using `STATE_RESET_DATA_SLICE` param)
    */
   handle(state, action, next): () => {} {
     if (getActionTypeFromInstance(action) === StateResetAll.type) {
       state = {
         ...state,
-        ...this.config.stateSlice,
+        ...this.config.STATE_SLICE,
       };
     }
     return next(state, action);

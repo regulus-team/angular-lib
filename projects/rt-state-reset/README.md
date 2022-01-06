@@ -1,12 +1,15 @@
-# RT States Reset v.0.0.1
+# About
 
-Module provide plugin that update (or reset) state values on `StateResetAll` action.
+RT States Reset v.0.0.1
 
-This may be useful if you find NGXS Reset Plugin works wrong with NGXS Storage Plugin
-(Storage Plugin restore data after reset).
+Module provide plugin that may update (or reset) state values on `StateResetAll` action.
+
+This may be useful if you find NGXS Reset Plugin works wrong
+(for example, if used with NGXS Storage Plugin data will be restored after reset).
 
 
 # Usage
+
 Import `RtStateResetModule` into your module and add it as provider:
 ```
 import {RtStateResetModule} from 'rt-states-reset';
@@ -26,9 +29,36 @@ Call `StateResetAll` action in your code:
 ```
 ...
 ctx.dispatch(new StateResetAll());
+...
 ```
 
-# Changes history
-`v.0.0.0` - copy rt-states-reset module from exiting projects
+# API
 
-`v.0.0.1` - move STATES_SLICE variable from settings to injected configs
+Actions:
+* `StateResetAll` - reset all states to object provided in configs (empty by default).
+
+Configs API: 
+* `STATE_SLICE` - (optional) state snapshot object. State will be reset to it on action call.
+
+# Example
+
+Simple usage:
+
+```
+import {RtStateResetModule} from 'rt-state-reset';
+
+
+@NgModule({
+  ...
+  imports: [
+    ...
+    RtStateResetModule.forRoot({
+      STATE_SLICE: settings.EXAMPLE_STATE_RESET,
+    }),
+    ...
+  ],
+  ...
+})
+export class MyModule {
+}
+```

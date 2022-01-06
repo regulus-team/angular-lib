@@ -1,34 +1,34 @@
-import { State, Selector, StateContext, Action, NgxsOnInit, Store } from '@ngxs/store';
+import {timer} from 'rxjs';
+import {take} from 'rxjs/operators';
+import {Action, NgxsOnInit, Selector, State, StateContext, Store} from '@ngxs/store';
+import {Inject, Injectable, Optional} from '@angular/core';
+import {RouterNavigation} from '@ngxs/router-plugin';
+import {takeRight, uniqueId} from 'lodash';
 import {
   BackendError,
-  ClearMessages,
-  CleanByIndex,
-  InfoMessage,
-  WarningMessage,
-  ErrorMessage,
-  DebugMessage,
-  SuccessMessage,
   CleanById,
+  CleanByIndex,
+  ClearMessages,
+  DebugMessage,
   DelayForClearState,
+  ErrorMessage,
   ForgotAboutDuplicate,
+  InfoMessage,
+  SuccessMessage,
+  WarningMessage,
 } from './rt-messages.actions';
-import { take } from 'rxjs/operators';
-import { timer } from 'rxjs';
-import { Settings } from '../../conf/settings';
-import { MessageType } from './symbols';
-import { uniqueId, takeRight } from 'lodash';
-import { Injectable } from '@angular/core';
-import {RouterNavigation} from '@ngxs/router-plugin';
+import {defaultConfig, MessageType, RtMessagesConfig, RtMessagesConfigToken} from './symbols';
+
 
 export class Message {
   constructor(
     public id: number,
     public type: string,
     public text: string,
-    public category?: string,
     public data?: any,
     public timeout?: number
-  ) {}
+  ) {
+  }
 }
 
 export class MessagesStateModel {
@@ -38,6 +38,7 @@ export class MessagesStateModel {
   lastTimeMsgInvoked: number;
   isLastMsgDuplicate: boolean;
 }
+
 
 @State<MessagesStateModel>({
   name: 'messages',
@@ -51,7 +52,16 @@ export class MessagesStateModel {
 })
 @Injectable()
 export class RtMessagesState implements NgxsOnInit {
-  constructor(private store: Store, private setting: Settings) {}
+  constructor(
+    private store: Store,
+    @Optional() @Inject(RtMessagesConfigToken) injectedConfig: RtMessagesConfig,
+  ) {
+    // Merge provided config with default values (so it never will be undefined).
+    this.config = Object.assign(defaultConfig, injectedConfig);
+  }
+
+  /** Current module config. */
+  private config: RtMessagesConfig;
 
   @Selector()
   static messages(state: MessagesStateModel): Message[] {
@@ -83,7 +93,8 @@ export class RtMessagesState implements NgxsOnInit {
     return state.isLastMsgDuplicate;
   }
 
-  ngxsOnInit(ctx: StateContext<MessagesStateModel>): void {}
+  ngxsOnInit(ctx: StateContext<MessagesStateModel>): void {
+  }
 
   @Action(RouterNavigation)
   routerNavigation(ctx: StateContext<MessagesStateModel>): void {
@@ -111,13 +122,13 @@ export class RtMessagesState implements NgxsOnInit {
       this.store.dispatch(new CleanById(state.messages[idx].id)); // !last => remove
     }
 
-    const limitedMessages = takeRight(state.messages, this.setting.MESSAGES_LIMIT - 1);
+    const limitedMessages = takeRight(state.messages, this.config.MESSAGES_LIMIT - 1);
     ctx.patchState({
       messages: [...limitedMessages, newMessage],
       latestMessage: newMessage,
       lastTimeMsgInvoked: updTime,
     });
-    const messagesTimeout = message.timeout || this.setting.MESSAGES_TIMEOUT;
+    const messagesTimeout = message.timeout || this.config.MESSAGES_TIMEOUT;
     if (messagesTimeout) {
       timer(messagesTimeout * 1000)
         .pipe(take(1))
@@ -163,7 +174,7 @@ export class RtMessagesState implements NgxsOnInit {
   delayForClearState(ctx: StateContext<MessagesStateModel>): void {
     const state = ctx.getState();
     if (state.lastTimeMsgInvoked) {
-      const updTime: number = state.lastTimeMsgInvoked + this.setting.MESSAGES_DELAY;
+      const updTime: number = state.lastTimeMsgInvoked + this.config.MESSAGES_TIMEOUT;
 
       if (updTime < Date.now()) {
         ctx.dispatch(new ClearMessages());
@@ -188,7 +199,7 @@ export class RtMessagesState implements NgxsOnInit {
   }
 
   @Action(CleanByIndex)
-  cleanByIndex(ctx: StateContext<MessagesStateModel>, { index }: CleanByIndex): void {
+  cleanByIndex(ctx: StateContext<MessagesStateModel>, {index}: CleanByIndex): void {
     const state = ctx.getState().messages;
 
     if (state.length === 1) {
@@ -201,7 +212,7 @@ export class RtMessagesState implements NgxsOnInit {
   }
 
   @Action(CleanById)
-  cleanById(ctx: StateContext<MessagesStateModel>, { id }: CleanById): void {
+  cleanById(ctx: StateContext<MessagesStateModel>, {id}: CleanById): void {
     const state = ctx.getState().messages;
     ctx.patchState({
       messages: state.filter(m => m.id !== id),

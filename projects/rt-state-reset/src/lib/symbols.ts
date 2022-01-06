@@ -1,13 +1,16 @@
 import {InjectionToken} from '@angular/core';
 
 
+/** Available configs for `RtStateResetConfig` module. */
 export interface RtStateResetConfig {
-  /** any global state data (provided state will be reset with given info) */
-  stateSlice: {};
+  /** Global state snapshot (all states will be reset to it). */
+  STATE_SLICE?: {};
 }
 
+/** Injection token for `RtStateReset` module. */
 export const RtStateResetConfigToken = new InjectionToken<RtStateResetConfig>('RtStateResetConfig');
 
+/** Default config for `RtStateReset` module. */
 export const defaultConfig: RtStateResetConfig = {
-  stateSlice: {},
+  STATE_SLICE: {},
 };

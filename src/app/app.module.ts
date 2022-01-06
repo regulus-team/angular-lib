@@ -3,7 +3,9 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {settings} from '../environments/environment';
 import {Settings} from '../conf/settings';
-import {RtPlatformModule} from '../../projects/rt-platform/src/lib/rt-platform.module';
+import {RtPlatformModule} from 'rt-platform';
+import {RtMessagesModule} from 'rt-messages';
+import {RtStateResetModule} from 'rt-state-reset';
 
 
 @NgModule({
@@ -14,6 +16,13 @@ import {RtPlatformModule} from '../../projects/rt-platform/src/lib/rt-platform.m
     BrowserModule,
     RtPlatformModule.forRoot({
       localBaseUrl: settings.BASE_URL,
+    }),
+    RtMessagesModule.forRoot({
+      MESSAGES_TIMEOUT: 6000,
+      MESSAGES_LIMIT: 8,
+    }),
+    RtStateResetModule.forRoot({
+      STATE_SLICE: settings.EXAMPLE_STATE_RESET,
     }),
   ],
   providers: [
